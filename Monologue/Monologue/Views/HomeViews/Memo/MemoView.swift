@@ -165,5 +165,17 @@ struct MemoView: View {
                 filteredMemoStore.setSearchMemos(searchMemos: [])
             }
         }
+        .refreshable {
+            await refreshMemos()
+        }
+    }
+    
+    // 리프레시 메모
+    func refreshMemos() async {
+        if let tempFilters = filters {
+            Task {
+                filteredMemoStore.setFilteredMemos(filters: tempFilters, userEmail: authManager.email)
+            }
+        }
     }
 }

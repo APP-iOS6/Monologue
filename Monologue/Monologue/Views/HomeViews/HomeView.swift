@@ -84,22 +84,10 @@ struct HomeView: View {
                             MemoView(filters: $selectedCategories)
                                 .frame(width: geometry.size.width)
                                 .clipped()
-                                .refreshable {
-                                    await memoStore.reloadMemos()
-                                    DispatchQueue.main.async {
-                                        selectedTab = 0
-                                    }
-                                }
                             
                             ColumnView(filters: $selectedCategories)
                                 .frame(width: geometry.size.width)
                                 .clipped()
-                                .refreshable {
-                                    await reloadColumns()
-                                    DispatchQueue.main.async {
-                                        selectedTab = 0
-                                    }
-                                }
                         }
                         .frame(width: geometry.size.width * 2)
                         .offset(x: selectedSegment == "메모" ? 0 : -geometry.size.width)
@@ -131,35 +119,6 @@ struct HomeView: View {
                 self.filteredColumns = try await columnStore.loadColumn()
                 self.filteredColumns = self.filteredColumns.filter { $0.email != userInfoStore.userInfo?.email }
             }
-        }
-    }
-    
-    // memo와 column의 refresh를 위한 함수
-    func reloadMemos() async {
-        do {
-            if selectedCategories == ["전체"] {
-                memoStore.memos = try await memoStore.loadMemos()
-            } else {
-                memoStore.memos = try await memoStore.loadMemos().filter { memo in
-                    memo.categories.contains { selectedCategories!.contains($0) }
-                }
-            }
-        } catch {
-            print("Error loading memos: \(error)")
-        }
-    }
-    
-    func reloadColumns() async {
-        do {
-            if selectedCategories == ["전체"] {
-                self.filteredColumns = try await columnStore.loadColumn()
-            } else {
-                self.filteredColumns = try await columnStore.loadColumn().filter { column in
-                    column.categories.contains { selectedCategories!.contains($0) }
-                }
-            }
-        } catch {
-            print("Error loading columns: \(error)")
         }
     }
 }

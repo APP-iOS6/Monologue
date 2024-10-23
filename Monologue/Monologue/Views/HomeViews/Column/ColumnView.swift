@@ -59,17 +59,11 @@ struct ColumnView: View {
     @State private var selectedUserInfo: UserInfo = UserInfo(uid: "", email: "", nickname: "", registrationDate: Date(), preferredCategories: [""], profileImageName: "", introduction: "", followers: [""], followings: [""], blocked: [""], likesMemos: [""], likesColumns: [""])
     
     var userColumns: [Column]?
-//    
-//    var sortedFilteredColumns: [Binding<Column>] {
-//        let columns = filteredColumns.indices.map { index in
-//            $filteredColumns[index]
-//        }
-//        return columns.sorted { $0.wrappedValue.date > $1.wrappedValue.date }
-//    }
     
     var body: some View {
         ZStack(alignment: .leading) {
             Color.background.ignoresSafeArea()
+            
             ScrollView {
                 VStack {
                     ForEach(filteredColumnStore.filteredColumns.indices, id: \.self) { index in
@@ -87,6 +81,11 @@ struct ColumnView: View {
                 .padding([.leading, .trailing])
             }
             .padding(.bottom)
+            
+            // 리프레시 추가
+            .refreshable {
+                await refreshColumns()
+            }
         }
         .onAppear {
             if let tempFilters = filters {
@@ -106,6 +105,15 @@ struct ColumnView: View {
         .onChange(of: userColumns) {
             if let userColumns = userColumns {
                 filteredColumnStore.setUserColumns(userColumns: userColumns)
+            }
+        }
+    }
+    
+    // 리프레시 칼럼
+    func refreshColumns() async {
+        if let tempFilters = filters {
+            Task {
+                filteredColumnStore.setFilteredMemos(filters: tempFilters, userEmail: authManager.email)
             }
         }
     }
@@ -185,7 +193,7 @@ struct PostRow: View {
         .cornerRadius(8)
         .overlay(RoundedRectangle(cornerRadius: 10)
             .stroke(.gray, lineWidth: 0.5))
-        .padding(.vertical, 1)        
+        .padding(.vertical, 1)
         .onAppear {
             Task{
                 // 이메일을 사용하여 유저 정보를 불러옴
