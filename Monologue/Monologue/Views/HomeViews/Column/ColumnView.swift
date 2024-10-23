@@ -64,8 +64,8 @@ struct PostRow: View {
                 
                 Spacer()
                 Text(timeAgoSinceDate(column.date)) // 초단위 삭제
-                    .font(.subheadline)
-                    .foregroundColor(.black)
+                    .font(.caption)
+                    .foregroundColor(.gray)
             }
             Text(column.title)
                 .font(.body)
@@ -103,7 +103,7 @@ struct PostRow: View {
                     if !category.isEmpty {
                         Text(category)
                             .font(.footnote)
-                            .foregroundColor(.black)
+                            .foregroundColor(.accentColor)
                             .padding(8)
                             .background(Color.gray.opacity(0.2))
                             .cornerRadius(14)

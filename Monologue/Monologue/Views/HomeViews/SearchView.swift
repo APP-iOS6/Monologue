@@ -15,9 +15,6 @@ struct SearchView: View {
     @EnvironmentObject private var memoStore: MemoStore
     @EnvironmentObject private var columnStore: ColumnStore
     
-    @State private var isTruncated: Bool? = nil
-    @State private var isExpended: Bool = false
-    @State private var scrollPosition: CGPoint = .zero
     @Binding var searchText: String
     @Binding var isSearching: Bool
     @State var recentWatchView: [String] = []
@@ -32,24 +29,8 @@ struct SearchView: View {
     
     // 더미데이터----------------------------------
     @State var recentSearchList: [String] = [
-        "시인", "한강 작가", "채식주의자", "흰", "문인", "사랑의 기술", "철학", "율리시스 무어", "카프카", "바퀴벌레", "존재적 사랑"
+        "테스트", "안녕", "Test", "흰", "문인", "사랑의 기술", "철학", "율리시스 무어", "카프카", "바퀴벌레", "존재적 사랑", "바보"
     ]
-    let recommandSearchList: [String] = [
-        "시인", "한강 작가", "채식주의자", "흰", "문인", "사랑의 기술", "철학", "율리시스 무어", "카프카", "바퀴벌레", "존재적 사랑"
-    ]
-    
-    var filteredSuggestions: [String] {
-        let allContents = (memoStore.memos.map { $0.content } + columnStore.columns.map { $0.content }).joined(separator: " ")
-        let allWords = Set(allContents.components(separatedBy: .whitespacesAndNewlines))
-        
-        let matchingWords = allWords.filter { word in
-            word.lowercased().contains(searchText.lowercased()) && !searchText.isEmpty
-        }
-        // 자음 순으로 정렬하고 최대 10개의 결과만 반환
-        return Array(matchingWords.sorted().prefix(10))
-    }
-    
-    //------------------------------------------
     
     var body: some View {
         GeometryReader { proxy in
@@ -57,10 +38,8 @@ struct SearchView: View {
                 ZStack {
                     Color.background
                         .ignoresSafeArea()
-//                    ScrollView {
                     VStack {
                         // MARK: - 검색 필드
-//                        Spacer()
                         HStack {
                             ZStack {
                                 RoundedRectangle(cornerRadius: 15)
@@ -106,7 +85,7 @@ struct SearchView: View {
                             }
                         }
                         .frame(width: proxy.size.width)
-                        
+                        Spacer()
                         //MARK: - 최근 검색어
                         if searchText.isEmpty {
                             Divider()
@@ -127,27 +106,29 @@ struct SearchView: View {
                                 Divider()
                                 
                                 // 최근 검색
-                                ForEach(recentSearchList, id:\.self) { search in
-                                    Button {
-                                        searchText = search
-                                        // 엔터 시 검색어 관련 게시글로 넘어가게 하는 로직
-                                        
-                                    } label : {
-                                        VStack {
-                                            HStack {
-                                                Image(systemName: "magnifyingglass")
-                                                    .resizable()
-                                                    .frame(width: 30, height: 30)
-                                                Text(search)
-                                                    .font(.subheadline)
-                                                Spacer()
-                                            }
-                                            .font(.system(size: 22))
-                                            .foregroundStyle(.accent)
-                                            .padding(.horizontal)
-                                            .padding(.vertical, 5)
+                                ScrollView(showsIndicators: false) {
+                                    ForEach(recentSearchList, id:\.self) { search in
+                                        Button {
+                                            searchText = search
+                                            // 엔터 시 검색어 관련 게시글로 넘어가게 하는 로직
                                             
-                                            Divider()
+                                        } label : {
+                                            VStack {
+                                                HStack {
+                                                    Image(systemName: "magnifyingglass")
+                                                        .resizable()
+                                                        .frame(width: 20, height: 20)
+                                                    Text(search)
+                                                        .font(.subheadline)
+                                                    Spacer()
+                                                }
+                                                .font(.system(size: 22))
+                                                .foregroundStyle(.accent)
+                                                .padding(.horizontal)
+                                                .padding(.vertical, 5)
+                                                
+                                                Divider()
+                                            }
                                         }
                                     }
                                 }
@@ -209,25 +190,6 @@ struct SearchView: View {
 extension SearchView {
     
     @ViewBuilder
-    private func recommandSearchButton(_ text: String) -> some View {
-        Button {
-            self.searchText = text
-        } label: {
-            HStack {
-                Image(systemName: "magnifyingglass")
-                    .foregroundStyle(.accent)
-                Text(text)
-                    .foregroundStyle(.black)
-                Spacer()
-            }
-            .padding(.horizontal)
-            .padding(.vertical, 5)
-            .font(.system(size: 20))
-            
-        }
-    }
-    
-    @ViewBuilder
     private func clearTextButton() -> some View {
         Button {
             self.searchText = ""
@@ -235,16 +197,6 @@ extension SearchView {
             Image(systemName: "x.circle.fill")
         }
     }
-    
-    // 검색어 맞는 게시글 반환
-//    private func loadSearchContent() async {
-//        do {
-//            searchMemos = try await memoStore.loadMemosByContent(content: searchText)
-//            searchColumns = try await columnStore.loadColumnsByContent(content: searchText)
-//        } catch {
-//            print("Error: \(error.localizedDescription)")
-//        }
-//    }
 }
 
 //
