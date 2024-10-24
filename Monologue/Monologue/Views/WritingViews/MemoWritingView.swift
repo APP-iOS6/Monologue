@@ -31,7 +31,7 @@ struct MemoWritingView: View {
     let rows = [GridItem(.fixed(50))]
     
     let placeholder: String = "문장을 입력해 주세요."
-    let fontOptions = ["기본서체",  "노트셰리프", "고펍바탕", "나눔스퀘어", "나눔바른펜"]
+    let fontOptions = ["기본서체",  "노토세리프", "고펍바탕", "나눔스퀘어", "나눔바른펜"]
     let fontFileNames = ["San Francisco", "NotoSerifKR-Regular", "KoPubWorldBatangPM", "NanumSquareOTFR", "NanumBarunpenOTF"] // 폰트 파일 이름
     
     let categoryOptions = ["오늘의 주제", "에세이", "사랑", "자연", "시", "자기계발", "추억", "소설", "SF", "IT", "기타"]
