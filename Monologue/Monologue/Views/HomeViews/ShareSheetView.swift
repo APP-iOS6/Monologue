@@ -99,7 +99,6 @@ struct ShareSheetView: View {
                 
                 Spacer().frame(height: 16) // 하단 여백 추가
             }
-            .background(Color(UIColor.systemGray6))
             .cornerRadius(16, corners: [.topLeft, .topRight]) // 상단 모서리만 둥글게 설정
             .padding(.horizontal) // 좌우 여백만 추가
             .padding(.top, 16) // 상단 여백 추가
@@ -111,7 +110,7 @@ struct ShareSheetView: View {
                     print("신고 사유: \(reason)")
                     isPresented = false
                 }
-                .presentationDetents([.fraction(0.4), .large]) // 시트 높이를 자동으로 조절
+                .presentationDetents([.fraction(0.5), .large]) // 시트 높이를 자동으로 조절
                 .presentationDragIndicator(.visible)
             }
         }

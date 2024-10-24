@@ -143,10 +143,20 @@ struct PostRow: View {
     var body: some View {
         VStack(alignment: .leading) {
             HStack {
-                Image(selectedUserInfo.profileImageName)
-                    .resizable()
-                    .frame(width: 15, height: 15)
-                    .clipShape(Circle())
+                if selectedUserInfo.profileImageName.isEmpty {
+                    Image(systemName: "person.fill") // 기본 시스템 이미지
+                        .resizable()
+                        .frame(width: 30, height: 30)
+                        .clipShape(Circle())
+                        .padding(.trailing, 8)
+                        .foregroundStyle(.accent)
+                } else {
+                    Image(selectedUserInfo.profileImageName) // 사용자 이미지
+                        .resizable()
+                        .frame(width: 30, height: 30)
+                        .clipShape(Circle())
+                        .padding(.trailing, 8)
+                }
                 
                 Text(column.userNickname)
                     .font(.caption2)

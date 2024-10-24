@@ -320,6 +320,32 @@ class MemoStore: ObservableObject {
         return memos
     }
     
+    // MARK: - 메모 email들로 로드
+    @MainActor
+    func loadMemosByEmails(emails: [String]) async throws -> [Memo] {
+        let db = Firestore.firestore()
+        
+        let querySnapshot = try await db.collection("Memo")
+            .whereField("email", in: emails)
+            .getDocuments()
+        
+        var memos: [Memo] = []
+        
+        for document in querySnapshot.documents {
+            do {
+                let memo = try await Memo(document: document)
+                
+                memos.append(memo)
+            } catch {
+                print("loadMemosByCategories error: \(error.localizedDescription)")
+            }
+        }
+        
+        self.memos = memos
+        
+        return memos
+    }
+    
     // MARK: - 메모 content로 포함 된 메모들 로드
     @MainActor
     func loadMemosByContent(content: String) async throws -> [Memo] {

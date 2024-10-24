@@ -26,11 +26,20 @@ struct MemoHeaderView: View {
                     MyPageView(userInfo: selectedUserInfo)
                         .navigationBarBackButtonHidden(true)
                 } label: {
-                    Image(selectedUserInfo.profileImageName)
-                        .resizable()
-                        .frame(width: 30, height: 30)
-                        .clipShape(Circle())
-                        .padding(.trailing, 8)
+                    if selectedUserInfo.profileImageName.isEmpty {
+                        Image(systemName: "person.fill") // 기본 시스템 이미지
+                            .resizable()
+                            .frame(width: 30, height: 30)
+                            .clipShape(Circle())
+                            .padding(.trailing, 8)
+                            .foregroundStyle(.accent)
+                    } else {
+                        Image(selectedUserInfo.profileImageName) // 사용자 이미지
+                            .resizable()
+                            .frame(width: 30, height: 30)
+                            .clipShape(Circle())
+                            .padding(.trailing, 8)
+                    }
                     Text(memo.userNickname)
                         .font(.subheadline)
                         .foregroundStyle(.gray)

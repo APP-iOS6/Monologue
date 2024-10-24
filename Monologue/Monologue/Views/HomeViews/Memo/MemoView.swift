@@ -76,7 +76,7 @@ class FilteredMemoStore: ObservableObject {
     func setUserMemos(userMemos: [Memo]) {
         DispatchQueue.main.async {
             Task {
-                try await self.filteredMemos = self.memoStore.loadMemosByUserEmail(email: userMemos[0].email)
+                self.filteredMemos = userMemos
                 self.loadImagesForMemos()
             }
         }
